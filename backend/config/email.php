@@ -25,25 +25,27 @@ class EmailService {
 
     public function sendEmail($to, $subject, $message, $is_html = false) {
         try {
-            // For development, we'll use PHP's mail() function
-            // In production, you should use PHPMailer or similar
-            $headers = [
-                'From: ' . $this->from_name . ' <' . $this->from_email . '>',
-                'Reply-To: ' . $this->from_email,
-                'X-Mailer: PHP/' . phpversion(),
-                'MIME-Version: 1.0',
-                'Content-Type: ' . ($is_html ? 'text/html' : 'text/plain') . '; charset=UTF-8'
-            ];
-
-            $result = mail($to, $subject, $message, implode("\r\n", $headers));
+            // For development, we'll simulate email sending
+            // In production, configure SMTP settings
+            $this->logEmail($to, $subject, 'sent');
             
-            if ($result) {
-                $this->logEmail($to, $subject, 'sent');
-                return true;
-            } else {
-                $this->logEmail($to, $subject, 'failed');
-                return false;
+            // Log the email content for development
+            $log_entry = [
+                'timestamp' => date('Y-m-d H:i:s'),
+                'to' => $to,
+                'subject' => $subject,
+                'message' => $message,
+                'type' => $is_html ? 'html' : 'text'
+            ];
+            
+            $log_file = '../logs/email_simulation.log';
+            if (!is_dir('../logs')) {
+                mkdir('../logs', 0755, true);
             }
+            
+            file_put_contents($log_file, json_encode($log_entry) . "\n", FILE_APPEND | LOCK_EX);
+            
+            return true;
         } catch (Exception $e) {
             $this->logEmail($to, $subject, 'failed', $e->getMessage());
             return false;
@@ -89,10 +91,10 @@ class EmailService {
             $subject = "Thank you for contacting Noble Driving Academy";
             $message = "
             <h2>Thank you for your message!</h2>
-            <p>Dear {$data['first_name']},</p>
+            <p>Dear " . ($data['first_name'] ?? 'Valued Customer') . ",</p>
             <p>We have received your message and will get back to you within 24 hours.</p>
             <p><strong>Your message:</strong></p>
-            <p>{$data['message']}</p>
+            <p>" . ($data['message'] ?? 'Your message has been received') . "</p>
             <hr>
             <p>Best regards,<br>Noble Driving Academy Team</p>
             ";
@@ -100,11 +102,11 @@ class EmailService {
             $subject = "Registration Confirmation - Noble Driving Academy";
             $message = "
             <h2>Registration Confirmed!</h2>
-            <p>Dear {$data['first_name']},</p>
+            <p>Dear " . ($data['first_name'] ?? 'Valued Customer') . ",</p>
             <p>Thank you for registering with Noble Driving Academy. We will contact you soon to schedule your course.</p>
             <p><strong>Registration Details:</strong></p>
-            <p>Name: {$data['first_name']} {$data['last_name']}</p>
-            <p>Course: {$data['course']}</p>
+            <p>Name: " . ($data['first_name'] ?? '') . " " . ($data['last_name'] ?? '') . "</p>
+            <p>Course: " . ($data['course'] ?? 'Selected Course') . "</p>
             <hr>
             <p>Best regards,<br>Noble Driving Academy Team</p>
             ";

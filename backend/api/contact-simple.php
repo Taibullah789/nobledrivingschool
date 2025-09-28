@@ -5,7 +5,7 @@
  */
 
 // Security and CORS headers
-require_once '../config/security.php';
+require_once __DIR__ . '/../config/security.php';
 
 // Rate limiting
 $client_ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
@@ -65,8 +65,8 @@ try {
     }
 
     // Save to database
-    require_once '../config/database.php';
-    require_once '../models/Contact.php';
+    require_once __DIR__ . '/../config/database.php';
+    require_once __DIR__ . '/../models/Contact.php';
     
     $contact_data = [
         'first_name' => $input['firstName'],
@@ -82,8 +82,8 @@ try {
     
     if ($result) {
         // Store email notification
-        require_once '../models/Email.php';
-        require_once '../config/email.php';
+        require_once __DIR__ . '/../models/Email.php';
+        require_once __DIR__ . '/../config/email.php';
         
         $email = new Email();
         $emailService = new EmailService();

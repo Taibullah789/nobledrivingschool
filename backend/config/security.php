@@ -44,16 +44,20 @@ class RateLimiter {
 }
 
 // Input sanitization
-function sanitizeInput($data) {
-    if (is_array($data)) {
-        return array_map('sanitizeInput', $data);
+if (!function_exists('sanitizeInput')) {
+    function sanitizeInput($data) {
+        if (is_array($data)) {
+            return array_map('sanitizeInput', $data);
+        }
+        return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
     }
-    return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
 }
 
 // Validate email
-function validateEmail($email) {
-    return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+if (!function_exists('validateEmail')) {
+    function validateEmail($email) {
+        return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+    }
 }
 
 // Validate phone number

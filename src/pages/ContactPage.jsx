@@ -36,6 +36,12 @@ const ContactPage = () => {
     }
     
     try {
+      // First test the simple API endpoint
+      const testResponse = await fetch('http://localhost:8080/api/test-simple.php')
+      const testResult = await testResponse.json()
+      console.log('API Test Result:', testResult)
+      
+      // Now try the contact form
       const response = await fetch('http://localhost:8080/api/contact-simple.php', {
         method: 'POST',
         headers: {
