@@ -26,23 +26,9 @@ const ContactPage = () => {
     e.preventDefault()
     setIsSubmitting(true)
     
-    // First test CORS
     try {
-      const corsTest = await fetch('http://localhost:8080/api/cors-test.php')
-      const corsResult = await corsTest.json()
-      console.log('CORS Test Result:', corsResult)
-    } catch (corsError) {
-      console.error('CORS Test Failed:', corsError)
-    }
-    
-    try {
-      // First test the simple API endpoint
-      const testResponse = await fetch('http://localhost:8080/api/test-simple.php')
-      const testResult = await testResponse.json()
-      console.log('API Test Result:', testResult)
-      
-      // Now try the contact form
-      const response = await fetch('http://localhost:8080/api/contact-simple.php', {
+      // Submit the contact form directly
+      const response = await fetch('/api/contact-simple.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

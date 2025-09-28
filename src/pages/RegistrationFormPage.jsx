@@ -29,13 +29,8 @@ const RegistrationFormPage = () => {
     e.preventDefault()
     
     try {
-      // First test the simple API endpoint
-      const testResponse = await fetch('http://localhost:8080/api/test-simple.php')
-      const testResult = await testResponse.json()
-      console.log('API Test Result:', testResult)
-      
-      // Now try the registration form
-      const response = await fetch('http://localhost:8080/api/registration-simple.php', {
+      // Submit the registration form directly
+      const response = await fetch('/api/registration-simple.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
