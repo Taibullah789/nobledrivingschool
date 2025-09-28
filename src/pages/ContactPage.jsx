@@ -26,24 +26,49 @@ const ContactPage = () => {
     e.preventDefault()
     setIsSubmitting(true)
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    // First test CORS
+    try {
+      const corsTest = await fetch('http://localhost:8080/api/cors-test.php')
+      const corsResult = await corsTest.json()
+      console.log('CORS Test Result:', corsResult)
+    } catch (corsError) {
+      console.error('CORS Test Failed:', corsError)
+    }
     
-    setIsSubmitting(false)
-    setIsSubmitted(true)
-    
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setIsSubmitted(false)
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        subject: '',
-        course: '',
-        message: ''
+    try {
+      const response = await fetch('http://localhost:8080/api/contact-simple.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
       })
-    }, 3000)
+      
+      const result = await response.json()
+      
+      if (result.success) {
+        setIsSubmitted(true)
+        // Reset form after 3 seconds
+        setTimeout(() => {
+          setIsSubmitted(false)
+          setFormData({
+            firstName: '',
+            lastName: '',
+            email: '',
+            subject: '',
+            course: '',
+            message: ''
+          })
+        }, 3000)
+      } else {
+        alert('Error: ' + (result.error || 'Failed to submit form'))
+      }
+    } catch (error) {
+      console.error('Network error:', error)
+      alert('Network error. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const courses = [

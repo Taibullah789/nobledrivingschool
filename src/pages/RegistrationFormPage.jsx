@@ -25,10 +25,45 @@ const RegistrationFormPage = () => {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
-    // Handle form submission here
+    
+    try {
+      const response = await fetch('http://localhost:8080/api/registration-simple.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      })
+      
+      const result = await response.json()
+      
+      if (result.success) {
+        alert('Registration submitted successfully! We will contact you soon.')
+        // Reset form
+        setFormData({
+          firstName: '',
+          middleName: '',
+          lastName: '',
+          addressLine1: '',
+          city: '',
+          state: '',
+          zipCode: '',
+          age: '',
+          schoolName: '',
+          phone: '',
+          email: '',
+          course: '',
+          comment: ''
+        })
+      } else {
+        alert('Error: ' + (result.error || 'Failed to submit registration'))
+      }
+    } catch (error) {
+      console.error('Network error:', error)
+      alert('Network error. Please try again.')
+    }
   }
 
   return (

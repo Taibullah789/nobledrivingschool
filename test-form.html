@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test Form</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .form-group { margin: 15px 0; }
+        label { display: block; margin-bottom: 5px; }
+        input, textarea { width: 300px; padding: 8px; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; cursor: pointer; }
+        .result { margin-top: 20px; padding: 10px; background: #f8f9fa; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Test API Connection</h1>
+    
+    <h2>Contact Form Test</h2>
+    <form id="contactForm">
+        <div class="form-group">
+            <label>First Name:</label>
+            <input type="text" name="firstName" value="Test" required>
+        </div>
+        <div class="form-group">
+            <label>Last Name:</label>
+            <input type="text" name="lastName" value="User" required>
+        </div>
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" name="email" value="test@example.com" required>
+        </div>
+        <div class="form-group">
+            <label>Message:</label>
+            <textarea name="message" rows="4" required>This is a test message</textarea>
+        </div>
+        <button type="submit">Test Contact API</button>
+    </form>
+    
+    <div id="result" class="result"></div>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                firstName: document.querySelector('input[name="firstName"]').value,
+                lastName: document.querySelector('input[name="lastName"]').value,
+                email: document.querySelector('input[name="email"]').value,
+                message: document.querySelector('textarea[name="message"]').value
+            };
+            
+            try {
+                const response = await fetch('http://localhost:8080/api/contact-simple.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                document.getElementById('result').innerHTML = '<h3>Success!</h3><pre>' + JSON.stringify(result, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<h3>Error:</h3><p style="color: red;">' + error.message + '</p>';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+</head>
+<body>
+    <h1>API Test Page</h1>
+    <button onclick="testContactAPI()">Test Contact API</button>
+    <button onclick="testRegistrationAPI()">Test Registration API</button>
+    <div id="result"></div>
+
+    <script>
+        async function testContactAPI() {
+            const testData = {
+                firstName: 'Test',
+                lastName: 'User',
+                email: 'test@example.com',
+                subject: 'Test Subject',
+                message: 'This is a test message'
+            };
+
+            try {
+                const response = await fetch('http://localhost/backend/api/contact.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                const result = await response.json();
+                document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<p style="color: red;">Error: ' + error.message + '</p>';
+            }
+        }
+
+        async function testRegistrationAPI() {
+            const testData = {
+                firstName: 'Test',
+                lastName: 'User',
+                email: 'test@example.com',
+                addressLine1: '123 Test St',
+                city: 'Test City',
+                state: 'VA',
+                zipCode: '12345',
+                age: 'adult',
+                course: 'teen-behind-wheel'
+            };
+
+            try {
+                const response = await fetch('http://localhost/backend/api/registration.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                const result = await response.json();
+                document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<p style="color: red;">Error: ' + error.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>
